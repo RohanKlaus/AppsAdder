@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import io
 
 # Set the page config
 st.set_page_config(
@@ -70,3 +71,13 @@ if submit:
 if st.button("Save to CSV"):
     df.to_csv("transactions.csv", index=False)
     st.write("Data saved to transactions.csv")
+
+# Create a button to download the data to a CSV file
+buffer = io.StringIO()
+df.to_csv(buffer, index=False)
+st.download_button(
+    label="Download CSV",
+    data=buffer.getvalue(),
+    file_name="transactions.csv",
+    mime="text/csv"
+)
