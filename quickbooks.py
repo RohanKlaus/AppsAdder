@@ -52,15 +52,18 @@ category = form.selectbox("Category", ["Income", "Expense"])
 submit = form.form_submit_button("Submit")
 
 # Create a dataframe to store the data
-data = {"Date": [], "Description": [], "Amount": [], "Category": []}
+@st.cache
+def load_data():
+    data = {"Date": [], "Description": [], "Amount": [], "Category": []}
+    return pd.DataFrame(data)
+
+df = load_data()
 
 # Save the data to the dataframe when the form is submitted
 if submit:
-    data["Date"].append(date)
-    data["Description"].append(description)
-    data["Amount"].append(amount)
-    data["Category"].append(category)
-    df = pd.DataFrame(data)
+    new_row = {"Date": [date], "Description": [description], "Amount": [amount], "Category": [category]}
+    new_df = pd.DataFrame(new_row)
+    df = pd.concat([df, new_df], ignore_index=True)
     st.write(df)
 
 # Create a button to save the data to a CSV file
