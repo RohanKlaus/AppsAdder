@@ -41,7 +41,7 @@ body {
 """, unsafe_allow_html=True)
 
 # Create a sidebar
-st.sidebar.header("QuickBooks Demo")
+st.sidebar.header("QuickBooks by Intuit")
 st.sidebar.write("This is a demo of an accounting application called QuickBooks.")
 
 # Create a form to enter data
@@ -83,8 +83,6 @@ st.download_button(
     mime="text/csv"
 )
 
-# Create a button to clear the entries
-if st.button("Clear Entries"):
-    os.remove("transactions.csv")
-    st.write("Entries cleared!")
-    st.stop()
+# Create a button to refresh the app
+if st.button("Refresh"):
+    st.experimental_rerun()
