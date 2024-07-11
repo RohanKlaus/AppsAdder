@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import io
+import os
 
 # Set the page config
 st.set_page_config(
@@ -14,27 +15,27 @@ st.set_page_config(
 st.markdown("""
 <style>
 body {
-    background-color: #f0f0f0;
+    background-color: #C6F7D0; /* light green */
 }
 .stApp {
-    background-color: #f0f0f0;
+    background-color: #C6F7D0; /* light green */
 }
 .stSidebar {
-    background-color: #34C759;
+    background-color: #FFFFFF; /* white */
 }
 .stSidebar .stSidebarHeader {
-    background-color: #34C759;
+    background-color: #FFFFFF; /* white */
 }
 .stSidebar .stSidebarHeader .stSidebarHeaderText {
-    color: #FFFFFF;
+    color: #34C759; /* dark green */
 }
 .stButton {
-    background-color: #34C759;
-    color: #FFFFFF;
+    background-color: #34C759; /* dark green */
+    color: #FFFFFF; /* white */
 }
 .stButton:hover {
-    background-color: #2E865F;
-    color: #FFFFFF;
+    background-color: #2E865F; /* darker green */
+    color: #FFFFFF; /* white */
 }
 </style>
 """, unsafe_allow_html=True)
@@ -53,10 +54,12 @@ category = form.selectbox("Category", ["Income", "Expense"])
 submit = form.form_submit_button("Submit")
 
 # Create a dataframe to store the data
-@st.cache
 def load_data():
-    data = {"Date": [], "Description": [], "Amount": [], "Category": []}
-    return pd.DataFrame(data)
+    if os.path.exists("transactions.csv"):
+        return pd.read_csv("transactions.csv")
+    else:
+        data = {"Date": [], "Description": [], "Amount": [], "Category": []}
+        return pd.DataFrame(data)
 
 df = load_data()
 
@@ -65,12 +68,11 @@ if submit:
     new_row = {"Date": [date], "Description": [description], "Amount": [amount], "Category": [category]}
     new_df = pd.DataFrame(new_row)
     df = pd.concat([df, new_df], ignore_index=True)
+    df.to_csv("transactions.csv", index=False)
     st.write(df)
 
-# Create a button to save the data to a CSV file
-if st.button("Save to CSV"):
-    df.to_csv("transactions.csv", index=False)
-    st.write("Data saved to transactions.csv")
+# Display the dataframe
+st.write(df)
 
 # Create a button to download the data to a CSV file
 buffer = io.StringIO()
