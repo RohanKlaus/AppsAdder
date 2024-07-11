@@ -83,6 +83,14 @@ st.download_button(
 )
 
 # Create a button to delete the recent entry
+if st.button("Delete Recent Entry"):
+    if os.path.exists("transactions.csv"):
+        df = pd.read_csv("transactions.csv")
+        df.drop(df.tail(1).index, inplace=True)
+        df.to_csv("transactions.csv", index=False)
+        st.experimental_rerun()
+
+# Create an "Undo" button to delete the recent entry
 if st.button("Undo"):
     if os.path.exists("transactions.csv"):
         df = pd.read_csv("transactions.csv")
