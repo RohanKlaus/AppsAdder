@@ -23,10 +23,10 @@ body {
 .stSidebar {
     background-color: #FFFFFF; /* white */
 }
-.stSidebar .stSidebarHeader {
+.stSidebar.stSidebarHeader {
     background-color: #FFFFFF; /* white */
 }
-.stSidebar .stSidebarHeader .stSidebarHeaderText {
+.stSidebar.stSidebarHeader.stSidebarHeaderText {
     color: #34C759; /* dark green */
 }
 .stButton {
@@ -63,16 +63,15 @@ def load_data():
 
 df = load_data()
 
+# Display the dataframe
+st.write(df)
+
 # Save the data to the dataframe when the form is submitted
 if submit:
     new_row = {"Date": [date], "Description": [description], "Amount": [amount], "Category": [category]}
     new_df = pd.DataFrame(new_row)
     df = pd.concat([df, new_df], ignore_index=True)
     df.to_csv("transactions.csv", index=False)
-    st.write(df)
-
-# Display the dataframe
-st.write(df)
 
 # Create a button to download the data to a CSV file
 buffer = io.StringIO()
