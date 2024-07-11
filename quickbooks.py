@@ -79,12 +79,11 @@ st.download_button(
     label="Download CSV",
     data=buffer.getvalue(),
     file_name="transactions.csv",
-    mime="text/csv",
-    button_color="#2E865F"  # dark green
+    mime="text/csv"
 )
 
 # Create a button to delete the recent entry
-if st.button("Delete Recent Entry", button_color="#2E865F"):  # dark green
+if st.button("Delete Recent Entry"):
     if os.path.exists("transactions.csv"):
         df = pd.read_csv("transactions.csv")
         df.drop(df.tail(1).index, inplace=True)
@@ -92,7 +91,7 @@ if st.button("Delete Recent Entry", button_color="#2E865F"):  # dark green
         st.experimental_rerun()
 
 # Create a button to refresh the app
-if st.button("Refresh", button_color="#2E865F"):  # dark green
+if st.button("Refresh"):
     if os.path.exists("transactions.csv"):
         os.remove("transactions.csv")
     st.experimental_rerun()
