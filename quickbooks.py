@@ -62,6 +62,7 @@ def load_data():
         return pd.DataFrame(data)
 
 df = load_data()
+history = [df.copy()]
 
 # Display the dataframe
 if submit:
@@ -69,6 +70,7 @@ if submit:
     new_df = pd.DataFrame(new_row)
     df = pd.concat([df, new_df], ignore_index=True)
     df.to_csv("transactions.csv", index=False)
+    history.append(df.copy())
 
 st.write(df)
 
@@ -90,11 +92,11 @@ if st.button("Delete Recent Entry"):
         df.to_csv("transactions.csv", index=False)
         st.experimental_rerun()
 
-# Create an "Undo" button to delete the recent entry
+# Create an "Undo" button to go back to the previous step
 if st.button("Undo"):
-    if os.path.exists("transactions.csv"):
-        df = pd.read_csv("transactions.csv")
-        df.drop(df.tail(1).index, inplace=True)
+    if len(history) > 1:
+        history.pop()
+        df = history[-1].copy()
         df.to_csv("transactions.csv", index=False)
         st.experimental_rerun()
 
