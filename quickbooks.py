@@ -30,11 +30,11 @@ body {
     color: #34C759; /* dark green */
 }
 .stButton {
-    background-color: #34C759; /* dark green */
+    background-color: #2E865F; /* dark green */
     color: #FFFFFF; /* white */
 }
 .stButton:hover {
-    background-color: #2E865F; /* darker green */
+    background-color: #1E5C3F; /* darker green */
     color: #FFFFFF; /* white */
 }
 </style>
@@ -79,11 +79,12 @@ st.download_button(
     label="Download CSV",
     data=buffer.getvalue(),
     file_name="transactions.csv",
-    mime="text/csv"
+    mime="text/csv",
+    button_color="#2E865F"  # dark green
 )
 
 # Create a button to delete the recent entry
-if st.button("Delete Recent Entry"):
+if st.button("Delete Recent Entry", button_color="#2E865F"):  # dark green
     if os.path.exists("transactions.csv"):
         df = pd.read_csv("transactions.csv")
         df.drop(df.tail(1).index, inplace=True)
@@ -91,7 +92,7 @@ if st.button("Delete Recent Entry"):
         st.experimental_rerun()
 
 # Create a button to refresh the app
-if st.button("Refresh"):
+if st.button("Refresh", button_color="#2E865F"):  # dark green
     if os.path.exists("transactions.csv"):
         os.remove("transactions.csv")
     st.experimental_rerun()
