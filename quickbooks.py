@@ -46,12 +46,12 @@ st.sidebar.write("This is a demo of an accounting application called QuickBooks.
 
 # Create a form to enter data
 st.title("Enter Transaction Data")
-form = st.form("transaction_form")
-date = form.date_input("Date")
-description = form.text_input("Description")
-amount = form.number_input("Amount")
-category = form.selectbox("Category", ["Income", "Expense"])
-submit = form.form_submit_button("Submit")
+with st.form("transaction_form"):
+    date = st.date_input("Date")
+    description = st.text_input("Description")
+    amount = st.number_input("Amount")
+    category = st.selectbox("Category", ["Income", "Expense"])
+    submit = st.form_submit_button("Submit")
 
 # Create a dataframe to store the data
 def load_data():
@@ -113,3 +113,17 @@ if "run" not in st.session_state:
 
 if st.session_state.run:
     st.experimental_rerun()
+
+# Add a chart to visualize the data
+st.title("Transaction History")
+chart_data = df.groupby("Category")["Amount"].sum()
+st.bar_chart(chart_data)
+
+# Add a filter to the dataframe
+st.title("Filter Transactions")
+category_filter = st.selectbox("Filter by Category", ["All", "Income", "Expense"])
+if category_filter!= "All":
+    filtered_df = df[df["Category"] == category_filter]
+    st.write(filtered_df)
+else:
+    st.write(df)
