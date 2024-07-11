@@ -64,14 +64,13 @@ def load_data():
 df = load_data()
 
 # Display the dataframe
-st.write(df)
-
-# Save the data to the dataframe when the form is submitted
 if submit:
     new_row = {"Date": [date], "Description": [description], "Amount": [amount], "Category": [category]}
     new_df = pd.DataFrame(new_row)
     df = pd.concat([df, new_df], ignore_index=True)
     df.to_csv("transactions.csv", index=False)
+
+st.write(df)
 
 # Create a button to download the data to a CSV file
 buffer = io.StringIO()
@@ -89,3 +88,4 @@ if st.button("Refresh"):
         os.remove("transactions.csv")
     st.experimental_rerun()
     st.sidebar.write("")  # Clear the sidebar
+    st.write(load_data())  # Refresh the dataframe
