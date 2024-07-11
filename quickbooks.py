@@ -1,70 +1,57 @@
 import streamlit as st
+import pandas as pd
 
-# Set page configuration
-st.set_page_config(
-    page_title="QuickBooks Demo",
-    page_icon=":money_with_wings:",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
+# Function to load existing data
+def load_data(filename):
+    try:
+        df = pd.read_csv(filename)
+    except FileNotFoundError:
+        df = pd.DataFrame(columns=['Customer Name', 'Invoice Amount', 'Expense Category', 'Expense Amount'])
+    return df
 
-# Set background color and text color
-st.markdown(
-    """
-    <style>
-    body {
-        color: black;
-        background-color: #ffffff;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Function to save data
+def save_data(df, filename):
+    df.to_csv(filename, index=False)
+
+# File path and data loading
+FILENAME = 'quickbooks_data.csv'
+data = load_data(FILENAME)
 
 # Title and description
-st.title('QuickBooks Demo')
-st.markdown('<style>h1{color: #8bc34a;}</style>', unsafe_allow_html=True)
-st.write('Welcome to the demo of QuickBooks accounting software!')
+st.title('QuickBooks Demo with Data Saving')
+st.write('Welcome to the demo of QuickBooks accounting software! Entries will be saved and can be accessed anytime.')
 
 # Sidebar navigation
 st.sidebar.title('Demo Sections')
-st.sidebar.markdown('<style>h2{color: #8bc34a;}</style>', unsafe_allow_html=True)
 app_mode = st.sidebar.selectbox('Choose a demo section',
                                 ['Dashboard', 'Invoices', 'Expenses'])
 
-# Simulate dashboard
+# Main content based on selection
 if app_mode == 'Dashboard':
     st.subheader('Dashboard Overview')
-    st.markdown('<style>h3{color: #8bc34a;}</style>', unsafe_allow_html=True)
+    st.write('Display any summary or saved data here.')
 
-    # Simulated data
-    total_sales = 100000
-    total_expenses = 50000
-    net_profit = total_sales - total_expenses
-
-    st.write(f'Total Sales: ${total_sales}')
-    st.write(f'Total Expenses: ${total_expenses}')
-    st.write(f'Net Profit: ${net_profit}')
-
-# Simulate invoices
 elif app_mode == 'Invoices':
     st.subheader('Create Invoice')
-    st.markdown('<style>h3{color: #8bc34a;}</style>', unsafe_allow_html=True)
 
     customer_name = st.text_input('Customer Name:')
     invoice_amount = st.number_input('Invoice Amount:', min_value=0.0)
 
     if st.button('Create Invoice'):
+        new_entry = {'Customer Name': customer_name, 'Invoice Amount': invoice_amount}
+        data = data.append(new_entry, ignore_index=True)
+        save_data(data, FILENAME)
         st.success(f'Invoice created for {customer_name} for ${invoice_amount}')
 
-# Simulate expenses
 elif app_mode == 'Expenses':
     st.subheader('Track Expenses')
-    st.markdown('<style>h3{color: #8bc34a;}</style>', unsafe_allow_html=True)
 
     expense_category = st.selectbox('Select Expense Category',
                                     ['Office Supplies', 'Travel', 'Utilities'])
     expense_amount = st.number_input('Expense Amount:', min_value=0.0)
 
     if st.button('Track Expense'):
+        new_entry = {'Expense Category': expense_category, 'Expense Amount': expense_amount}
+        data = data.append(new_entry, ignore_index=True)
+        save_data(data, FILENAME)
         st.success(f'Expense of ${expense_amount} recorded for {expense_category}')
