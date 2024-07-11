@@ -98,7 +98,7 @@ if st.button("Undo"):
         history.pop()
         df = history[-1].copy()
         df.to_csv("transactions.csv", index=False)
-        st.experimental_rerun()
+        st.session_state.run = True
 
 # Create a button to refresh the app
 if st.button("Refresh"):
@@ -107,3 +107,9 @@ if st.button("Refresh"):
     st.experimental_rerun()
     st.sidebar.write("")  # Clear the sidebar
     st.write(load_data())  # Refresh the dataframe
+
+if "run" not in st.session_state:
+    st.session_state.run = False
+
+if st.session_state.run:
+    st.experimental_rerun()
