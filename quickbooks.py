@@ -1,59 +1,69 @@
 import streamlit as st
 import pandas as pd
 
-filename = 'quickbooks_data.csv'
+# Set the page config
+st.set_page_config(
+    page_title="QuickBooks Demo",
+    page_icon=":moneybag:",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# Function to load existing data or create an empty DataFrame
-def load_data(filename):
-    try:
-        df = pd.read_csv(filename)
-    except FileNotFoundError:
-        df = pd.DataFrame(columns=['Customer Name', 'Invoice Amount', 'Expense Category', 'Expense Amount'])
-    return df
+# Set the theme colors
+st.markdown("""
+<style>
+body {
+    background-color: #f0f0f0;
+}
+.stApp {
+    background-color: #f0f0f0;
+}
+.stSidebar {
+    background-color: #34C759;
+}
+.stSidebar .stSidebarHeader {
+    background-color: #34C759;
+}
+.stSidebar .stSidebarHeader .stSidebarHeaderText {
+    color: #FFFFFF;
+}
+.stButton {
+    background-color: #34C759;
+    color: #FFFFFF;
+}
+.stButton:hover {
+    background-color: #2E865F;
+    color: #FFFFFF;
+}
+</style>
+""", unsafe_allow_html=True)
 
-# Function to save data
-def save_data(df, filename):
-    df.to_csv(filename, index=False)
+# Create a sidebar
+st.sidebar.header("QuickBooks Demo")
+st.sidebar.write("This is a demo of an accounting application called QuickBooks.")
 
-# File path and data loading
-FILENAME = 'quickbooks_data.csv'
-data = load_data(FILENAME)
+# Create a form to enter data
+st.title("Enter Transaction Data")
+form = st.form("transaction_form")
+date = form.date_input("Date")
+description = form.text_input("Description")
+amount = form.number_input("Amount")
+category = form.selectbox("Category", ["Income", "Expense"])
+submit = form.form_submit_button("Submit")
 
-# App layout and components
-st.title('QuickBooks Demo with Data Saving')
-st.write('Welcome to the demo of QuickBooks accounting software! Entries will be saved and can be accessed anytime.')
+# Create a dataframe to store the data
+data = {"Date": [], "Description": [], "Amount": [], "Category": []}
 
-st.sidebar.title('Demo Sections')
-app_mode = st.sidebar.selectbox('Choose a demo section',
-                                ['Dashboard', 'Invoices', 'Expenses'])
+# Save the data to the dataframe when the form is submitted
+if submit:
+    data["Date"].append(date)
+    data["Description"].append(description)
+    data["Amount"].append(amount)
+    data["Category"].append(category)
+    df = pd.DataFrame(data)
+    st.write(df)
 
-if app_mode == 'Dashboard':
-    st.subheader('Dashboard Overview')
-    st.write('Display any summary or saved data here.')
-
-elif app_mode == 'Invoices':
-    st.subheader('Create Invoice')
-
-    customer_name = st.text_input('Customer Name:')
-    invoice_amount = st.number_input('Invoice Amount:', min_value=0.0)
-
-    if st.button('Create Invoice'):
-        new_entry = {'Customer Name': customer_name, 'Invoice Amount': invoice_amount,
-                     'Expense Category': '', 'Expense Amount': 0.0}  # Ensure all columns are defined
-        data = data.append(new_entry, ignore_index=True)
-        save_data(data, FILENAME)
-        st.success(f'Invoice created for {customer_name} for ${invoice_amount}')
-
-elif app_mode == 'Expenses':
-    st.subheader('Track Expenses')
-
-    expense_category = st.selectbox('Select Expense Category',
-                                    ['Office Supplies', 'Travel', 'Utilities'])
-    expense_amount = st.number_input('Expense Amount:', min_value=0.0)
-
-    if st.button('Track Expense'):
-        new_entry = {'Customer Name': '', 'Invoice Amount': 0.0,  # Ensure all columns are defined
-                     'Expense Category': expense_category, 'Expense Amount': expense_amount}
-        data = data.append(new_entry, ignore_index=True)
-        save_data(data, FILENAME)
-        st.success(f'Expense of ${expense_amount} recorded for {expense_category}')
+# Create a button to save the data to a CSV file
+if st.button("Save to CSV"):
+    df.to_csv("transactions.csv", index=False)
+    st.write("Data saved to transactions.csv")
