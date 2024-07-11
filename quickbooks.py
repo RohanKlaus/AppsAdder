@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# Function to load existing data
+# Function to load existing data or create an empty DataFrame
 def load_data(filename):
     try:
         df = pd.read_csv(filename)
@@ -17,16 +17,14 @@ def save_data(df, filename):
 FILENAME = 'quickbooks_data.csv'
 data = load_data(FILENAME)
 
-# Title and description
+# App layout and components
 st.title('QuickBooks Demo with Data Saving')
 st.write('Welcome to the demo of QuickBooks accounting software! Entries will be saved and can be accessed anytime.')
 
-# Sidebar navigation
 st.sidebar.title('Demo Sections')
 app_mode = st.sidebar.selectbox('Choose a demo section',
                                 ['Dashboard', 'Invoices', 'Expenses'])
 
-# Main content based on selection
 if app_mode == 'Dashboard':
     st.subheader('Dashboard Overview')
     st.write('Display any summary or saved data here.')
