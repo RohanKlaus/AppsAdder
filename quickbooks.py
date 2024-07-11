@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+FILENAME = 'quickbooks_data.csv'
+
 # Function to load existing data or create an empty DataFrame
 def load_data(filename):
     try:
