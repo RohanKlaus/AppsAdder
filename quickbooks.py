@@ -82,6 +82,14 @@ st.download_button(
     mime="text/csv"
 )
 
+# Create a button to delete the recent entry
+if st.button("Delete Recent Entry"):
+    if os.path.exists("transactions.csv"):
+        df = pd.read_csv("transactions.csv")
+        df.drop(df.tail(1).index, inplace=True)
+        df.to_csv("transactions.csv", index=False)
+        st.experimental_rerun()
+
 # Create a button to refresh the app
 if st.button("Refresh"):
     if os.path.exists("transactions.csv"):
