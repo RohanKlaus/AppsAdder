@@ -36,7 +36,8 @@ elif app_mode == 'Invoices':
     invoice_amount = st.number_input('Invoice Amount:', min_value=0.0)
 
     if st.button('Create Invoice'):
-        new_entry = {'Customer Name': customer_name, 'Invoice Amount': invoice_amount}
+        new_entry = {'Customer Name': customer_name, 'Invoice Amount': invoice_amount,
+                     'Expense Category': '', 'Expense Amount': 0.0}  # Ensure all columns are defined
         data = data.append(new_entry, ignore_index=True)
         save_data(data, FILENAME)
         st.success(f'Invoice created for {customer_name} for ${invoice_amount}')
@@ -49,7 +50,8 @@ elif app_mode == 'Expenses':
     expense_amount = st.number_input('Expense Amount:', min_value=0.0)
 
     if st.button('Track Expense'):
-        new_entry = {'Expense Category': expense_category, 'Expense Amount': expense_amount}
+        new_entry = {'Customer Name': '', 'Invoice Amount': 0.0,  # Ensure all columns are defined
+                     'Expense Category': expense_category, 'Expense Amount': expense_amount}
         data = data.append(new_entry, ignore_index=True)
         save_data(data, FILENAME)
         st.success(f'Expense of ${expense_amount} recorded for {expense_category}')
