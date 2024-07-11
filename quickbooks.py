@@ -82,3 +82,9 @@ st.download_button(
     file_name="transactions.csv",
     mime="text/csv"
 )
+
+# Create a button to clear the entries
+if st.button("Clear Entries"):
+    os.remove("transactions.csv")
+    st.write("Entries cleared!")
+    st.stop()
